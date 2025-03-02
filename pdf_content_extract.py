@@ -1,6 +1,6 @@
 import os
 import PyPDF2 as pdf
-from PyPDF2 import PdfReader
+from PyPDF2 import PdfReader, PdfWriter
 
 base_path = os.path.expanduser('~')
 path = os.path.join(base_path, 'Desktop', 'Estacio-2025.1','desenvolvimento_rapido_de_aplicacoes_em_python', 'concluido')
@@ -28,6 +28,19 @@ def extract_text_from_pdf(pdf_path):
                 results.append(text)
             return ' '.join(results)
 
+def split_pdf(pdf_path):
+    with open(pdf_path, 'rb') as file:
+        reader = PdfReader(file)
+        for page_num in range(0, len(reader.pages)):
+            selected_page = reader.pages[page_num]
+            writer = PdfWriter()
+            writer.add_page(selected_page)
+            filename = os.path.split(pdf_path)[1]
+            new_filename = f'{filename}_{page_num+1}.pdf'
+            with open(new_filename, 'wb') as out:
+                writer.write(out)
+            print(f'PDF criado com o nome: {new_filename}')
 
-print(get_pdf_metadata(file_path))
-print(extract_text_from_pdf(file_path))
+print(split_pdf(file_path))
+# print(get_pdf_metadata(file_path))
+# print(extract_text_from_pdf(file_path))
