@@ -7,19 +7,14 @@ path = os.path.join(base_path, 'Desktop', 'Estacio-2025.1','desenvolvimento_rapi
 
 file_path = os.path.join(path, 'tema-3-manipulacao_de_dados_em_arquivos.pdf')
 
-if os.path.exists(file_path):
-    with open(file_path, 'rb') as file:
-        reader = PdfReader(file)
-        print(reader)
-        info = reader.metadata
-        print(info.title)
-        print(info.author)
-        print(info.creator)
-        print(info.subject)
-        print(len(reader.pages))
-        print(reader.pages[10].extract_text())
+def get_pdf_metadata(pdf_path):
+    if os.path.exists(pdf_path):
+        with open(pdf_path, 'rb') as file:
+            reader = PdfReader(file)
+            info = reader.metadata
+            return info
 
-else:
-    print(f"O Arquivo {file_path} não encontrado.")
+    else:
+        print(f"O Arquivo {pdf_path} não encontrado.")
 
-print(reader.pages[0].extract_text())
+print(get_pdf_metadata(file_path))
