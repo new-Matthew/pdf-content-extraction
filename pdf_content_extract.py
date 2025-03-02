@@ -4,7 +4,6 @@ from PyPDF2 import PdfReader, PdfWriter
 
 base_path = os.path.expanduser('~')
 path = os.path.join(base_path, 'Desktop', 'Estacio-2025.1','desenvolvimento_rapido_de_aplicacoes_em_python', 'concluido')
-
 file_path = os.path.join(path, 'tema-3-manipulacao_de_dados_em_arquivos.pdf')
 
 def get_pdf_metadata(pdf_path):
@@ -13,7 +12,6 @@ def get_pdf_metadata(pdf_path):
             reader = PdfReader(file)
             info = reader.metadata
             return info
-
     else:
         print(f"O Arquivo {pdf_path} não encontrado.")
 
@@ -52,8 +50,16 @@ def split_pdf_page(pdf_path, start_page:int=0, stop_page:int=0):
             new_filename = f'{filename}_from_{start_page+1}_to_{stop_page+1}.pdf'
             with open(new_filename, 'wb') as out:
                 writer.write(out)
+def fetch_all_pdf_files(parent_folder:str):
+    target_files = []
+    for path, subdirs, files in os.walk(parent_folder):
+        for name in files:
+            if name.endswith('.pdf'):
+                target_files.append(os.path.join(path, name))
+        return target_files
 
-print(split_pdf_page(file_path, 1, 2))
+print(*fetch_all_pdf_files(path), sep='\n')
+# print(split_pdf_page(file_path, 1, 2))
 # print(split_pdf(file_path))
 # print(get_pdf_metadata(file_path))
 # print(extract_text_from_pdf(file_path))
