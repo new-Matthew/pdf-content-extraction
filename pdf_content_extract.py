@@ -41,6 +41,19 @@ def split_pdf(pdf_path):
                 writer.write(out)
             print(f'PDF criado com o nome: {new_filename}')
 
-print(split_pdf(file_path))
+def split_pdf_page(pdf_path, start_page:int=0, stop_page:int=0):
+    with(open(pdf_path, 'rb')) as file:
+        reader = PdfReader(file)
+        writer = PdfWriter()
+        for page_num in range(start_page, stop_page):
+            selected_page = reader.pages[page_num]
+            writer.add_page(selected_page)
+            filename = os.path.split(pdf_path)[1]
+            new_filename = f'{filename}_from_{start_page+1}_to_{stop_page+1}.pdf'
+            with open(new_filename, 'wb') as out:
+                writer.write(out)
+
+print(split_pdf_page(file_path, 1, 2))
+# print(split_pdf(file_path))
 # print(get_pdf_metadata(file_path))
 # print(extract_text_from_pdf(file_path))
