@@ -1,4 +1,5 @@
 import os
+import re
 import PyPDF2 as pdf
 from PyPDF2 import PdfReader, PdfWriter, PdfMerger
 
@@ -50,6 +51,15 @@ def split_pdf_page(pdf_path, start_page:int=0, stop_page:int=0):
             new_filename = f'{filename}_from_{start_page+1}_to_{stop_page+1}.pdf'
             with open(new_filename, 'wb') as out:
                 writer.write(out)
+
+def natural_sort(file_list):
+    def extract_number(text):
+        match = re.search(r'_(\d+)\.pdf$', text)
+        return int(match.group(1)) if match else float('inf')
+
+    return sorted(file_list, key=extract_number)
+
+
 def fetch_all_pdf_files(parent_folder:str):
     target_files = []
     for path, subdirs, files in os.walk(parent_folder):
@@ -67,7 +77,8 @@ def merge_pdf(list_pdfs, output_filename='final_pdf.pdf'):
         merger.write(f)
 
 pdf_list = fetch_all_pdf_files(path)
-merge_pdf(pdf_list)
+pdf_list_sorted = natural_sort(pdf_list)
+merge_pdf(pdf_list_sorted)
 
 #print(*fetch_all_pdf_files(path), sep='\n')
 # print(split_pdf_page(file_path, 1, 2))
