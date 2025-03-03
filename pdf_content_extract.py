@@ -3,9 +3,10 @@ import re
 import PyPDF2 as pdf
 from PyPDF2 import PdfReader, PdfWriter, PdfMerger
 
+#mude o caminho até o arquivo conforme necessário
 base_path = os.path.expanduser('~')
-path = os.path.join(base_path, 'Desktop', 'Estacio-2025.1','desenvolvimento_rapido_de_aplicacoes_em_python', 'concluido')
-file_path = os.path.join(path, 'tema-3-manipulacao_de_dados_em_arquivos.pdf')
+path = os.path.join(base_path, 'Desktop', 'Estacio-2025.1','desenvolvimento_rapido_de_aplicacoes_em_python')
+file_path = os.path.join(path, 'Minimundo.pdf')
 
 def get_pdf_metadata(pdf_path):
     if os.path.exists(pdf_path):
@@ -76,11 +77,22 @@ def merge_pdf(list_pdfs, output_filename='final_pdf.pdf'):
             merger.append(file)
         merger.write(f)
 
-pdf_list = fetch_all_pdf_files(path)
-pdf_list_sorted = natural_sort(pdf_list)
-merge_pdf(pdf_list_sorted)
+def rotate_pdf(pdf_path, page_num:int, rotation:int=90):
+    with open(pdf_path, 'rb') as f:
+        reader = PdfReader(f)
+        writer = PdfWriter()
+        writer.add_page(reader.pages[page_num])
+        writer.pages[page_num].rotate(rotation)
+        filename = os.path.split(pdf_path)[1]
+        new_filename = f'{filename}_{rotation}_page_rotated.pdf'
+        with open(new_filename, 'wb') as out:
+            writer.write(out)
 
-#print(*fetch_all_pdf_files(path), sep='\n')
+print(rotate_pdf(file_path, 0, 270))
+# pdf_list = fetch_all_pdf_files(path)
+# pdf_list_sorted = natural_sort(pdf_list)
+# merge_pdf(pdf_list_sorted)
+# print(*fetch_all_pdf_files(path), sep='\n')
 # print(split_pdf_page(file_path, 1, 2))
 # print(split_pdf(file_path))
 # print(get_pdf_metadata(file_path))
