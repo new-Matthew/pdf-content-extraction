@@ -6,7 +6,7 @@ from PyPDF2 import PdfReader, PdfWriter, PdfMerger
 #mude o caminho até o arquivo conforme necessário
 base_path = os.path.expanduser('~')
 path = os.path.join(base_path, 'Desktop', 'Estacio-2025.1','desenvolvimento_rapido_de_aplicacoes_em_python')
-file_path = os.path.join(path, 'Minimundo.pdf')
+file_path = os.path.join(path, '4-Linux.pdf')
 
 def get_pdf_metadata(pdf_path):
     if os.path.exists(pdf_path):
@@ -88,7 +88,21 @@ def rotate_pdf(pdf_path, page_num:int, rotation:int=90):
         with open(new_filename, 'wb') as out:
             writer.write(out)
 
-print(rotate_pdf(file_path, 0, 270))
+def extract_images_from_pdf(pdf_path):
+    with open(pdf_path, 'rb') as f:
+        reader = PdfReader(f)
+        for page_num in range(0, len(reader.pages)):
+            selected_page = reader.pages[page_num]
+            # print(selected_page.images)
+            
+            for img_file_obj in selected_page.images:
+                with open(f'{img_file_obj.name}', 'wb') as out:
+                    out.write(img_file_obj.data)
+                print("imagem extraída com sucesso!")
+
+
+extract_images_from_pdf(file_path)
+# print(rotate_pdf(file_path, 0, 270))
 # pdf_list = fetch_all_pdf_files(path)
 # pdf_list_sorted = natural_sort(pdf_list)
 # merge_pdf(pdf_list_sorted)
