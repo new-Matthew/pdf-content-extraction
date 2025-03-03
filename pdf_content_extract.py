@@ -1,6 +1,6 @@
 import os
 import PyPDF2 as pdf
-from PyPDF2 import PdfReader, PdfWriter
+from PyPDF2 import PdfReader, PdfWriter, PdfMerger
 
 base_path = os.path.expanduser('~')
 path = os.path.join(base_path, 'Desktop', 'Estacio-2025.1','desenvolvimento_rapido_de_aplicacoes_em_python', 'concluido')
@@ -58,7 +58,18 @@ def fetch_all_pdf_files(parent_folder:str):
                 target_files.append(os.path.join(path, name))
         return target_files
 
-print(*fetch_all_pdf_files(path), sep='\n')
+def merge_pdf(list_pdfs, output_filename='final_pdf.pdf'):
+    merger = PdfMerger()
+    with open(output_filename, 'wb') as f:
+        for file in list_pdfs:
+            print(file)
+            merger.append(file)
+        merger.write(f)
+
+pdf_list = fetch_all_pdf_files(path)
+merge_pdf(pdf_list)
+
+#print(*fetch_all_pdf_files(path), sep='\n')
 # print(split_pdf_page(file_path, 1, 2))
 # print(split_pdf(file_path))
 # print(get_pdf_metadata(file_path))
