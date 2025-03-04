@@ -2,11 +2,12 @@ import os
 import re
 import PyPDF2 as pdf
 from PyPDF2 import PdfReader, PdfWriter, PdfMerger
+from PIL import Image
 
 #mude o caminho até o arquivo conforme necessário
 base_path = os.path.expanduser('~')
 path = os.path.join(base_path, 'Desktop', 'Estacio-2025.1','desenvolvimento_rapido_de_aplicacoes_em_python')
-file_path = os.path.join(path, '4-Linux.pdf')
+file_path = os.path.join(path, 'R14.jpg')
 
 def get_pdf_metadata(pdf_path):
     if os.path.exists(pdf_path):
@@ -100,8 +101,15 @@ def extract_images_from_pdf(pdf_path):
                     out.write(img_file_obj.data)
                 print("imagem extraída com sucesso!")
 
+def convert_img_to_pdf(image_file):
+    my_image = Image.open(image_file)
+    img = my_image.convert('RGB')
+    filename = f'{os.path.splitext(image_file)[0]}.pdf'
+    img.save(filename)
 
-extract_images_from_pdf(file_path)
+
+convert_img_to_pdf(file_path)
+#extract_images_from_pdf(file_path)
 # print(rotate_pdf(file_path, 0, 270))
 # pdf_list = fetch_all_pdf_files(path)
 # pdf_list_sorted = natural_sort(pdf_list)
